@@ -2,7 +2,7 @@ import { type RouteConfig, index, prefix, layout, route } from "@react-router/de
 
 export default [
 
-    // route("products", "./page/admin/product/Products.tsx"),
+    route("products", "./page/admin/product/Products.tsx"),
     route("productsInsert", "./page/admin/product/ProductsInsert.tsx"),
     
     // ...prefix("products", [
