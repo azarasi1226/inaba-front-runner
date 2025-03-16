@@ -1,0 +1,681 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Inaba",
+      "version": "0.0.1"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8082",
+        "description": "Generated server url"
+      }
+    ],
+    "paths": {
+      "/api/products/{id}": {
+        "get": {
+          "tags": [
+            "Product"
+          ],
+          "operationId": "handle_9",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FindProductByIdHttpResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Product"
+          ],
+          "operationId": "handle",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "required": [
+                    "description",
+                    "name",
+                    "price"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "price": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+      "/api/users": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "operationId": "handle_1",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserHttpRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+      "/api/products": {
+        "get": {
+          "tags": [
+            "Product"
+          ],
+          "operationId": "handle_8",
+          "parameters": [
+            {
+              "name": "name",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "pageSize",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            {
+              "name": "pageNumber",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            {
+              "name": "sortProperty",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "PRICE",
+                  "REGISTRATION_DATE"
+                ]
+              }
+            },
+            {
+              "name": "sortDirection",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "ASC",
+                  "DESC"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SearchProductsHttpResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Product"
+          ],
+          "operationId": "handle_2",
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "required": [
+                    "brandId",
+                    "description",
+                    "id",
+                    "name",
+                    "price"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "brandId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "price": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+      "/api/brands": {
+        "post": {
+          "tags": [
+            "Brand"
+          ],
+          "operationId": "handle_3",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBrandHttpRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+      "/api/baskets": {
+        "get": {
+          "tags": [
+            "Basket"
+          ],
+          "operationId": "handle_10",
+          "parameters": [
+            {
+              "name": "pageSize",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            {
+              "name": "pageNumber",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FindBasketByIdHttpResponse"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OIDC": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Basket"
+          ],
+          "operationId": "handle_4",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetBasketItemHttpRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "security": [
+            {
+              "OIDC": []
+            }
+          ]
+        }
+      },
+      "/api/stocks/{id}/increase": {
+        "patch": {
+          "tags": [
+            "Stock"
+          ],
+          "operationId": "handle_5",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncreaseStockHttpRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+      "/api/stocks/{id}/decrease": {
+        "patch": {
+          "tags": [
+            "Stock"
+          ],
+          "operationId": "handle_6",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecreaseStockHttpRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+      "/api/users/metadatas/{subject}": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "operationId": "handle_7",
+          "parameters": [
+            {
+              "name": "subject",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FindUserMetadataBySubjectHttpResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/baskets/items/{productId}": {
+        "delete": {
+          "tags": [
+            "Basket"
+          ],
+          "operationId": "handle_11",
+          "parameters": [
+            {
+              "name": "productId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "security": [
+            {
+              "OIDC": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "CreateUserHttpRequest": {
+          "required": [
+            "id",
+            "subject"
+          ],
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string"
+            }
+          }
+        },
+        "CreateBrandHttpRequest": {
+          "required": [
+            "id",
+            "name"
+          ],
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        },
+        "SetBasketItemHttpRequest": {
+          "required": [
+            "productId",
+            "quantity"
+          ],
+          "type": "object",
+          "properties": {
+            "productId": {
+              "type": "string"
+            },
+            "quantity": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "IncreaseStockHttpRequest": {
+          "required": [
+            "idempotencyId",
+            "increaseCount"
+          ],
+          "type": "object",
+          "properties": {
+            "increaseCount": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "idempotencyId": {
+              "type": "string"
+            }
+          }
+        },
+        "DecreaseStockHttpRequest": {
+          "required": [
+            "decreaseCount",
+            "idempotencyId"
+          ],
+          "type": "object",
+          "properties": {
+            "decreaseCount": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "idempotencyId": {
+              "type": "string"
+            }
+          }
+        },
+        "FindUserMetadataBySubjectHttpResponse": {
+          "required": [
+            "basketId",
+            "userId"
+          ],
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string"
+            },
+            "basketId": {
+              "type": "string"
+            }
+          }
+        },
+        "PageSummary": {
+          "required": [
+            "items",
+            "paging"
+          ],
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Summary"
+              }
+            },
+            "paging": {
+              "$ref": "#/components/schemas/Paging"
+            }
+          }
+        },
+        "Paging": {
+          "required": [
+            "pageNumber",
+            "pageSize",
+            "totalCount"
+          ],
+          "type": "object",
+          "properties": {
+            "totalCount": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "pageSize": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "pageNumber": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "SearchProductsHttpResponse": {
+          "required": [
+            "page"
+          ],
+          "type": "object",
+          "properties": {
+            "page": {
+              "$ref": "#/components/schemas/PageSummary"
+            }
+          }
+        },
+        "Summary": {
+          "required": [
+            "id",
+            "name",
+            "price",
+            "quantity"
+          ],
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "imageUrl": {
+              "type": "string"
+            },
+            "price": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "quantity": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "FindProductByIdHttpResponse": {
+          "required": [
+            "description",
+            "name",
+            "price",
+            "quantity",
+            "stockId"
+          ],
+          "type": "object",
+          "properties": {
+            "stockId": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "imageUrl": {
+              "type": "string"
+            },
+            "price": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "quantity": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "FindBasketByIdHttpResponse": {
+          "required": [
+            "page"
+          ],
+          "type": "object",
+          "properties": {
+            "page": {
+              "$ref": "#/components/schemas/PageSummary"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "OIDC": {
+          "type": "openIdConnect",
+          "openIdConnectUrl": "https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_rXbtLxdoU/.well-known/openid-configuration"
+        }
+      }
+    }
+  }
