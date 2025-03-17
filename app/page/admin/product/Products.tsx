@@ -79,7 +79,7 @@ export default function Products() {
     const response = await client.GET('/api/products', {
       params: {
         query: {
-          name: search,  // 商品名をクエリパラメータとして渡す
+          likeProductName: search,  // 商品名をクエリパラメータとして渡す
           pageSize: 10,
           pageNumber: pageNumber - 1,
           sortProperty: sortProperty,

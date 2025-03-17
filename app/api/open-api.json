@@ -122,7 +122,7 @@
           "operationId": "handle_8",
           "parameters": [
             {
-              "name": "name",
+              "name": "likeProductName",
               "in": "query",
               "required": true,
               "schema": {

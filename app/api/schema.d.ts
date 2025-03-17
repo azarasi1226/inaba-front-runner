@@ -302,7 +302,7 @@ export interface operations {
     handle_8: {
         parameters: {
             query: {
-                name: string;
+                likeProductName : string;
                 pageSize: number;
                 pageNumber: number;
                 sortProperty: "PRICE" | "REGISTRATION_DATE";
