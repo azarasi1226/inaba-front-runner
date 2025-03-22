@@ -13,8 +13,6 @@ import OrgPagination  from "../../../components/ui/org-pagination.js";
 
 //import {Pagination}  from "../../../components/ui/orgPagination.js";
 
-
-
 // const StyledTableRow = styled(TableRow)(({ theme }) => ({
 //   '&:nth-of-type(odd)': {
 //     backgroundColor: "#ECEFF1"
@@ -144,7 +142,6 @@ export default function Products() {
       <Button onClick={handleButtonSearch}>検索</Button>
       <Button onClick={handleProductRegister}>新規登録</Button>
     </div>
-
 
     <div className="flex justify-end mt-4">
       <Select onValueChange={handleSortChange}>
