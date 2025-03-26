@@ -15,30 +15,30 @@ const menus = [
     groupTitle: "商品",
     items: [
       {
-        title: "商品検索",
-        url: "/admin/products",
-        icon: Search,
-      },
-      {
         title: "商品登録",
-        url: "/admin/products/create",
+        url: "/admin/product/create",
         icon: FilePlus2,
       },
+      {
+        title: "商品検索",
+        url: "/admin/product/search",
+        icon: Search,
+      }
     ]
   },
   {
     groupTitle: "ブランド",
     items: [
       {
-        title: "ブランド検索",
-        url: "/admin/brands",
-        icon: Search,
-      },
-      {
         title: "ブランド登録",
-        url: "/admin/brands/create",
+        url: "/admin/brand/create",
         icon: FilePlus2,
       },
+      {
+        title: "ブランド検索",
+        url: "/admin/brand/search",
+        icon: Search,
+      }
     ]
   },
   {
@@ -58,7 +58,7 @@ export function AppSidebar() {
       <Sidebar>
       <SidebarContent>
         {menus.map((menu) => (
-          <SidebarGroup>
+          <SidebarGroup key={menu.groupTitle}>
             <SidebarGroupLabel>{menu.groupTitle}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>

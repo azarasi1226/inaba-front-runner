@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useNavigate, useRouteError } from 'react-router';
+import { useNavigate, useSearchParams, useRouteError } from 'react-router';
 import createClient from "openapi-fetch";
 import type { paths } from "../../../../api/schema";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-import OrgPagination from "~/components/custom/pagination";
+import IPagination from "~/components/custom/i-pagination";
 import type { Route } from "./+types/search-product";
 
 interface Product {
@@ -36,20 +36,22 @@ export async function loader({ request }: Route.LoaderArgs) {
     const client = createClient<paths>({ baseUrl: "http://localhost:8082" })
 
     const url = new URL(request.url)
+    // この画面は10件ずつ表示する
+    const pageSize = 10
+
     const likeProductName = url.searchParams.get("likeProductName") || ""
-    const pageSize = parseInt(url.searchParams.get("pageSize") || "10")
-    const pageNumber = parseInt(url.searchParams.get("pageNumber") || "0")
-    const sortProperty = url.searchParams.get("sortProperty") || "PRICE"
-    const sortDirection = url.searchParams.get("sortDirection") || "ASC"
+    const pageNumber = parseInt(url.searchParams.get("pageNumber") || "1")
+    const sortProperty = (url.searchParams.get("sortProperty") || "PRICE") as "PRICE" | "REGISTRATION_DATE"
+    const sortDirection = (url.searchParams.get("sortDirection") || "ASC") as "ASC" | "DESC"
 
     const { data } = await client.GET('/api/products', {
         params: {
             query: {
-                likeProductName: likeProductName,  // 商品名をクエリパラメータとして渡す
+                likeProductName: likeProductName,
                 pageSize: pageSize,
                 pageNumber: pageNumber,
-                sortProperty: "PRICE",
-                sortDirection: "ASC"
+                sortProperty: sortProperty,
+                sortDirection: sortDirection
             }
         },
     });
@@ -66,27 +68,35 @@ export default function SearchProduct({
 }: Route.ComponentProps) {
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
-    const [selectSort, setSelectSort] = useState<number>(1);
+    const [_, setSearchParams] = useSearchParams();
+
+    const totalPage = Math.ceil(loaderData.page.paging.totalCount / loaderData.page.paging.pageSize);
+    const currentPage = loaderData.page.paging.pageNumber;
 
     function handleSeach() {
-        const url = `/admin` +
-            `?likeProductName=${search}` +
-            `&pageSize=10` +
-            `&pageNumber=${0}` +
-            `&sortProperty=${sorts.get(selectSort)?.property}` +
-            `&sortDirection=${sorts.get(selectSort)?.direction}`;
-        navigate(url);
+        setSearchParams(prev => {
+            prev.set("likeProductName", search);
+            return prev;
+        });
     }
 
     function handleSortChange(value: string) {
-        setSelectSort(Number(value));
-        handleSeach();
+        setSearchParams(prev => {
+            prev.set("sortProperty", sorts.get(parseInt(value))!.property);
+            prev.set("sortDirection", sorts.get(parseInt(value))!.direction);
+            return prev;
+        });
+    }
+
+    function handlePageChange(page: number) {
+        setSearchParams(prev => {
+            prev.set("pageNumber", String(page));
+            return prev;
+        });
     }
 
     return (
         <div className="p-6">
-            <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">気持ち良すぎる商品マスタ</h1>
-
             <div className="flex flex-col gap-4 mt-4 p-4">
                 <div className="flex justify-center gap-4">
                     <Input
@@ -115,20 +125,26 @@ export default function SearchProduct({
             <Table className="mt-4">
                 <TableHeader>
                     <TableRow>
-                        <TableHead>商品コード</TableHead>
+                        <TableHead>画像</TableHead>
                         <TableHead>商品名</TableHead>
                         <TableHead>値段</TableHead>
                         <TableHead>在庫数</TableHead>
-                        <TableHead>更新</TableHead>
+                        <TableHead>登録日時</TableHead>
+                        <TableHead>更新日時</TableHead>
+                        <TableHead></TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {loaderData.page.items.map((product) => (
                         <TableRow key={product.id}>
-                            <TableCell>{product.id}</TableCell>
+                            <TableCell>
+                                <img className="w-16 h-16" src={product.imageUrl} />
+                            </TableCell>
                             <TableCell>{product.name}</TableCell>
                             <TableCell>{product.price}</TableCell>
                             <TableCell>{product.quantity}</TableCell>
+                            <TableCell>2025/10/23</TableCell>
+                            <TableCell>2025/10/23</TableCell>
                             <TableCell>
                                 <Button onClick={() => navigate(`/product/update/${product.id}`)}>更新</Button>
                             </TableCell>
@@ -138,7 +154,7 @@ export default function SearchProduct({
             </Table>
 
             <div className="flex justify-center mt-4">
-                {/* <OrgPagination totalPages={totalPages} currentPage={page} onPageChange={setPage} /> */}
+                <IPagination totalPages={totalPage} currentPage={currentPage} onPageChange={handlePageChange} />
             </div>
         </div>
     );
