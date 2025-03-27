@@ -43,7 +43,7 @@ export default function IPagination({ totalPages, currentPage, onPageChange }: P
             <PaginationLink
               onClick={() => onPageChange(currentPage - 1)}
             >
-              ←
+              &lt;
             </PaginationLink>
           </PaginationItem>
         )}
@@ -107,7 +107,7 @@ export default function IPagination({ totalPages, currentPage, onPageChange }: P
             <PaginationLink
               onClick={() => onPageChange(currentPage + 1)}
             >
-              →
+              &gt;
             </PaginationLink>
           </PaginationItem>
         )}

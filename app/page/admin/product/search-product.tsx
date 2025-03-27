@@ -125,7 +125,7 @@ export default function SearchProduct({
             <Table className="mt-4">
                 <TableHeader>
                     <TableRow>
-                        <TableHead>画像</TableHead>
+                        <TableHead></TableHead>
                         <TableHead>商品名</TableHead>
                         <TableHead>値段</TableHead>
                         <TableHead>在庫数</TableHead>
