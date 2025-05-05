@@ -1,77 +1,49 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams, useRouteError } from 'react-router';
-import createClient from "openapi-fetch";
-import type { paths } from "../../../../api/schema";
+import { useNavigate, useSearchParams, useRouteError, isRouteErrorResponse } from 'react-router';
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-import IPagination from "~/components/custom/i-pagination";
-import type { Route } from "./+types/search-product";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import Pagination from "~/components/custom/pagination";
+import type { Route } from "./+types/index";
 
-interface Product {
-    id: string,
-    name: string,
-    imageUrl: string | undefined,
-    price: number,
-    quantity: number
-}
-
-interface SortValue {
+type Sort = {
+    key: string,
     title: string,
     direction: "ASC" | "DESC",
     property: "PRICE" | "REGISTRATION_DATE"
 }
 
-const sorts: Map<number, SortValue> = new Map<number, SortValue>([
-    // 価格の昇順
-    [1, { title: "価格の昇順", direction: "ASC", property: "PRICE" }],
-    // 価格の降順
-    [2, { title: "価格の降順", direction: "DESC", property: "PRICE" }],
-    // 登録された順
-    [3, { title: "登録された順", direction: "ASC", property: "REGISTRATION_DATE" }],
-]);
+const SORTS: Sort[] = [
+    { key: "1", title: "価格が安い順", direction: "ASC", property: "PRICE" },
+    { key: "2", title: "価格が高い順", direction: "DESC", property: "PRICE" },
+    { key: "3", title: "登録された順", direction: "ASC", property: "REGISTRATION_DATE" },
+]
 
-export async function loader({ request }: Route.LoaderArgs) {
-    const client = createClient<paths>({ baseUrl: "http://localhost:8082" })
+export const DEFORT_SORT = SORTS[1]!;
 
-    const url = new URL(request.url)
-    // この画面は10件ずつ表示する
-    const pageSize = 10
-
-    const likeProductName = url.searchParams.get("likeProductName") || ""
-    const pageNumber = parseInt(url.searchParams.get("pageNumber") || "1")
-    const sortProperty = (url.searchParams.get("sortProperty") || "PRICE") as "PRICE" | "REGISTRATION_DATE"
-    const sortDirection = (url.searchParams.get("sortDirection") || "ASC") as "ASC" | "DESC"
-
-    const { data } = await client.GET('/api/products', {
-        params: {
-            query: {
-                likeProductName: likeProductName,
-                pageSize: pageSize,
-                pageNumber: pageNumber,
-                sortProperty: sortProperty,
-                sortDirection: sortDirection
-            }
-        },
-    });
-
-    if(data == undefined) {
-        throw Error("APIの問い合わせに失敗しました");
-    }
-
-    return data
-}
+export { loader } from './loader';
 
 export default function SearchProduct({
     loaderData,
 }: Route.ComponentProps) {
     const navigate = useNavigate();
-    const [search, setSearch] = useState('');
-    const [_, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
+    // ページング条件を計算
     const totalPage = Math.ceil(loaderData.page.paging.totalCount / loaderData.page.paging.pageSize);
     const currentPage = loaderData.page.paging.pageNumber;
+
+    // 検索条件をQueryParameterから復元
+    const defaultLikeProductName = searchParams.get("likeProductName") || "";
+    const defaultSortProperty = searchParams.get("sortProperty");
+    const defultSortDirection = searchParams.get("sortDirection");
+    const defaultSort = SORTS.find((sort) => {
+        return sort.property === defaultSortProperty && sort.direction === defultSortDirection;
+    }) || DEFORT_SORT;
+
+    // State
+    const [search, setSearch] = useState<string>(defaultLikeProductName);
 
     function handleSeach() {
         setSearchParams(prev => {
@@ -82,8 +54,10 @@ export default function SearchProduct({
 
     function handleSortChange(value: string) {
         setSearchParams(prev => {
-            prev.set("sortProperty", sorts.get(parseInt(value))!.property);
-            prev.set("sortDirection", sorts.get(parseInt(value))!.direction);
+            // SORTS.map()によって展開されたkeyがvalueとして来るので、必ず存在する。
+            // よって!をつけている。
+            prev.set("sortProperty", SORTS.find(sort => sort.key === value)!.property);
+            prev.set("sortDirection", SORTS.find(sort => sort.key === value)!.direction);
             return prev;
         });
     }
@@ -110,14 +84,16 @@ export default function SearchProduct({
             </div>
 
             <div className="flex justify-end mt-4">
-                <Select onValueChange={handleSortChange}>
+                <Select onValueChange={handleSortChange} defaultValue={defaultSort.key}>
                     <SelectTrigger className="w-44">
                         <SelectValue placeholder="並び替え" />
                     </SelectTrigger>
-                    <SelectContent >
-                        {Array.from(sorts.entries()).map(([key, value]) => (
-                            <SelectItem key={key} value={String(key)}>{value.title}</SelectItem>
-                        ))}
+                    <SelectContent>
+                        {SORTS.map(
+                            ({ key, title }) => (
+                                <SelectItem key={key} value={key}>{title}</SelectItem>
+                            )
+                        )}
                     </SelectContent>
                 </Select>
             </div>
@@ -154,13 +130,43 @@ export default function SearchProduct({
             </Table>
 
             <div className="flex justify-center mt-4">
-                <IPagination totalPages={totalPage} currentPage={currentPage} onPageChange={handlePageChange} />
+                <Pagination totalPage={totalPage}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange} />
             </div>
         </div>
     );
 }
 
 export function ErrorBoundary() {
+    return ErrorPage()
+}
+
+export function ErrorPage() {
     const error = useRouteError();
-    return <div>エラーが起きました。</div>;
+
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800">
+            <div className="bg-white shadow-md rounded-lg p-8 max-w-lg text-center">
+                <h1 className="text-4xl font-bold text-red-500 mb-4">
+                    {isRouteErrorResponse(error) ? `${error.status} ${error.statusText}` : "エラーが発生しました"}
+                </h1>
+                <p className="text-lg text-gray-600 mb-6">
+                    {isRouteErrorResponse(error)
+                        ? error.data || "リクエストの処理中にエラーが発生しました。"
+                        : error instanceof Error
+                            ? error.message
+                            : "不明なエラーが発生しました。"}
+                </p>
+                {error instanceof Error && (
+                    <details className="bg-gray-100 p-4 rounded-lg text-left text-sm text-gray-600">
+                        <summary className="cursor-pointer font-semibold text-gray-800">
+                            スタックトレースの表示
+                        </summary>
+                        <pre className="mt-2 whitespace-pre-wrap">{error.stack}</pre>
+                    </details>
+                )}
+            </div>
+        </div>
+    );
 }

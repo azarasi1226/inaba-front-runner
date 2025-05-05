@@ -1,33 +1,29 @@
-import { Button } from "~/components/ui/button";
-import { cn } from "../../lib/utils";
 import {
-  Pagination,
+  Pagination as ShadcnPaging,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "~/components/ui/pagination"
 
-interface PaginationProps {
-  totalPages: number;
+type PaginationProps = {
+  totalPage: number;
   currentPage: number;
   onPageChange: (page: number) => void;
 }
 
-export default function IPagination({ totalPages, currentPage, onPageChange }: PaginationProps) {
+export default function Pagination(props: PaginationProps) {
   const pageNumbers = [];
   const maxPageNumbersToShow = 5;
   const halfMaxPageNumbersToShow = Math.floor(maxPageNumbersToShow / 2);
 
-  let startPage = Math.max(1, currentPage - halfMaxPageNumbersToShow);
-  let endPage = Math.min(totalPages, currentPage + halfMaxPageNumbersToShow);
+  let startPage = Math.max(1, props.currentPage - halfMaxPageNumbersToShow);
+  let endPage = Math.min(props.totalPage, props.currentPage + halfMaxPageNumbersToShow);
 
-  if (currentPage <= halfMaxPageNumbersToShow) {
-    endPage = Math.min(totalPages, maxPageNumbersToShow);
-  } else if (currentPage + halfMaxPageNumbersToShow >= totalPages) {
-    startPage = Math.max(1, totalPages - maxPageNumbersToShow + 1);
+  if (props.currentPage <= halfMaxPageNumbersToShow) {
+    endPage = Math.min(props.totalPage, maxPageNumbersToShow);
+  } else if (props.currentPage + halfMaxPageNumbersToShow >= props.totalPage) {
+    startPage = Math.max(1, props.totalPage - maxPageNumbersToShow + 1);
   }
 
   for (let i = startPage; i <= endPage; i++) {
@@ -35,13 +31,13 @@ export default function IPagination({ totalPages, currentPage, onPageChange }: P
   }
 
   return (
-    <Pagination>
+    <ShadcnPaging>
       <PaginationContent>
         {/* ひとつ前のページに戻る */}
-        {currentPage != 1 && (
+        {props.currentPage != 1 && (
           <PaginationItem>
             <PaginationLink
-              onClick={() => onPageChange(currentPage - 1)}
+              onClick={() => props.onPageChange(props.currentPage - 1)}
             >
               &lt;
             </PaginationLink>
@@ -53,7 +49,7 @@ export default function IPagination({ totalPages, currentPage, onPageChange }: P
           <>
             <PaginationItem>
               <PaginationLink
-                onClick={() => onPageChange(1)}
+                onClick={() => props.onPageChange(1)}
                 className="w-10"
               >
                 1
@@ -73,8 +69,8 @@ export default function IPagination({ totalPages, currentPage, onPageChange }: P
             <PaginationLink
               key={page}
 
-              onClick={() => onPageChange(page)}
-              isActive={currentPage === page}
+              onClick={() => props.onPageChange(page)}
+              isActive={props.currentPage === page}
             >
               {page}
             </PaginationLink>
@@ -83,35 +79,35 @@ export default function IPagination({ totalPages, currentPage, onPageChange }: P
 
 
         {/* 最後のページへ */}
-        {endPage < totalPages && (
+        {endPage < props.totalPage && (
           <>
-            {endPage < totalPages - 1 && (
+            {endPage < props.totalPage - 1 && (
               <PaginationItem>
                 <PaginationEllipsis />
               </PaginationItem>
             )}
             <PaginationItem>
               <PaginationLink
-                onClick={() => onPageChange(totalPages)}
+                onClick={() => props.onPageChange(props.totalPage)}
                 className="w-10"
               >
-                {totalPages}
+                {props.totalPage}
               </PaginationLink>
             </PaginationItem>
           </>
         )}
 
         {/* 次のページに進む */}
-        {currentPage != totalPages && (
+        {props.currentPage != props.totalPage && (
           <PaginationItem>
             <PaginationLink
-              onClick={() => onPageChange(currentPage + 1)}
+              onClick={() => props.onPageChange(props.currentPage + 1)}
             >
               &gt;
             </PaginationLink>
           </PaginationItem>
         )}
       </PaginationContent>
-    </Pagination>
+    </ShadcnPaging>
   );
 }
