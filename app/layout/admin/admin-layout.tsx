@@ -3,14 +3,14 @@ import { SidebarProvider } from "~/components/ui/sidebar";
 import { AppSidebar } from "./sidebar";
 
 export default function AdminLayout() {
-    return (
-        <SidebarProvider>
-            <AppSidebar />
-            <main className="w-full">
-                <Outlet />
-            </main>
-        </SidebarProvider>
-    );
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="w-full">
+        <Outlet />
+      </main>
+    </SidebarProvider>
+  );
 }
 
 // export function ErrorBoundary() {

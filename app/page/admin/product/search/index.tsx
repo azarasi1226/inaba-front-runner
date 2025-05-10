@@ -9,58 +9,58 @@ import { getDefaultQuerys } from "./get-default-querys";
 export { loader } from "./loader";
 
 export default function SearchProduct({ loaderData }: Route.ComponentProps) {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const defaultQuerys = getDefaultQuerys(searchParams);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const defaultQuerys = getDefaultQuerys(searchParams);
 
-    function handleSeachChange(likeProductName: string) {
-        setSearchParams((prev) => {
-            prev.set("likeProductName", likeProductName);
-            prev.set("pageNumber", "1");
-            return prev;
-        });
-    }
+  function handleSeachChange(likeProductName: string) {
+    setSearchParams((prev) => {
+      prev.set("likeProductName", likeProductName);
+      prev.set("pageNumber", "1");
+      return prev;
+    });
+  }
 
-    function handleSortChange(sortCondition: SortCondition) {
-        setSearchParams((prev) => {
-            prev.set("sortCondition", sortCondition);
-            return prev;
-        });
-    }
+  function handleSortChange(sortCondition: SortCondition) {
+    setSearchParams((prev) => {
+      prev.set("sortCondition", sortCondition);
+      return prev;
+    });
+  }
 
-    function handlePageChange(page: number) {
-        setSearchParams((prev) => {
-            prev.set("pageNumber", String(page));
-            return prev;
-        });
-    }
+  function handlePageChange(page: number) {
+    setSearchParams((prev) => {
+      prev.set("pageNumber", String(page));
+      return prev;
+    });
+  }
 
-    return (
-        <div className="p-6">
-            <div className="mt-4 flex justify-center">
-                <SearchField
-                    defaultValue={defaultQuerys.likeProductName}
-                    onSearchChange={handleSeachChange}
-                />
-            </div>
+  return (
+    <div className="p-6">
+      <div className="mt-4 flex justify-center">
+        <SearchField
+          defaultValue={defaultQuerys.likeProductName}
+          onSearchChange={handleSeachChange}
+        />
+      </div>
 
-            <div className="mt-4 flex justify-end">
-                <SortConditionSelect
-                    defaultValue={defaultQuerys.sortCondition}
-                    onSortChange={handleSortChange}
-                />
-            </div>
+      <div className="mt-4 flex justify-end">
+        <SortConditionSelect
+          defaultValue={defaultQuerys.sortCondition}
+          onSortChange={handleSortChange}
+        />
+      </div>
 
-            <div className="mt-4">
-                <Table products={loaderData.page.items} />
-            </div>
+      <div className="mt-4">
+        <Table products={loaderData.page.items} />
+      </div>
 
-            <div className="mt-4 flex justify-center">
-                <Pagination
-                    totalPage={loaderData.page.paging.totalPage}
-                    currentPage={loaderData.page.paging.pageNumber}
-                    onPageChange={handlePageChange}
-                />
-            </div>
-        </div>
-    );
+      <div className="mt-4 flex justify-center">
+        <Pagination
+          totalPage={loaderData.page.paging.totalPage}
+          currentPage={loaderData.page.paging.pageNumber}
+          onPageChange={handlePageChange}
+        />
+      </div>
+    </div>
+  );
 }

@@ -14,7 +14,6 @@
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "space",
-		"indentSize": 4,
 		"lineWidth": 100
 	},
 	"organizeImports": {
