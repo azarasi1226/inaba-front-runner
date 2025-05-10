@@ -1,6 +1,6 @@
-import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
-import { AppSidebar } from "./sidebar"
 import { Outlet } from "react-router";
+import { SidebarProvider } from "~/components/ui/sidebar";
+import { AppSidebar } from "./sidebar";
 
 export default function AdminLayout() {
     return (
@@ -10,7 +10,7 @@ export default function AdminLayout() {
                 <Outlet />
             </main>
         </SidebarProvider>
-    )
+    );
 }
 
 // export function ErrorBoundary() {
