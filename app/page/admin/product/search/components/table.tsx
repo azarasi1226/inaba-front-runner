@@ -21,20 +21,20 @@ export function Table(props: Props) {
     <ShadcnTable>
       <TableHeader>
         <TableRow>
-          <TableHead></TableHead>
+          <TableHead />
           <TableHead>商品名</TableHead>
           <TableHead>値段</TableHead>
           <TableHead>在庫数</TableHead>
           <TableHead>登録日時</TableHead>
           <TableHead>更新日時</TableHead>
-          <TableHead></TableHead>
+          <TableHead />
         </TableRow>
       </TableHeader>
       <TableBody>
         {props.products.map((product) => (
           <TableRow key={product.id}>
             <TableCell>
-              <img className="h-15 w-15" src={product.imageUrl} />
+              <img className="h-15 w-15" alt="商品画像" src={product.imageUrl} />
             </TableCell>
             <TableCell>{product.name}</TableCell>
             <TableCell>{product.price}</TableCell>

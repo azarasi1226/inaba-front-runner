@@ -34,7 +34,7 @@ export default function Pagination(props: PaginationProps) {
     <ShadcnPaging>
       <PaginationContent>
         {/* ひとつ前のページに戻る */}
-        {props.currentPage != 1 && (
+        {props.currentPage !== 1 && (
           <PaginationItem>
             <PaginationLink onClick={() => props.onPageChange(props.currentPage - 1)}>
               &lt;
@@ -88,7 +88,7 @@ export default function Pagination(props: PaginationProps) {
         )}
 
         {/* 次のページに進む */}
-        {props.currentPage != props.totalPage && (
+        {props.currentPage !== props.totalPage && (
           <PaginationItem>
             <PaginationLink onClick={() => props.onPageChange(props.currentPage + 1)}>
               &gt;

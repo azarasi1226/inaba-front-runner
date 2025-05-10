@@ -8,7 +8,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const defaultQuerys = getDefaultQuerys(url.searchParams);
 
-  const { data } = await openApiFetchClient.GET("/api/products", {
+  const { data, error } = await openApiFetchClient.GET("/api/products", {
     params: {
       query: {
         likeProductName: defaultQuerys.likeProductName,
@@ -19,5 +19,9 @@ export async function loader({ request }: Route.LoaderArgs) {
     },
   });
 
-  return data!;
+  if (error || data === undefined) {
+    throw Error(error);
+  }
+
+  return data;
 }
