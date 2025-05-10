@@ -35,7 +35,8 @@ export function Table(props: Props) {
                         <TableCell>2025/10/23</TableCell>
                         <TableCell>2025/10/23</TableCell>
                         <TableCell>
-                            <Button onClick={() => navigate(`/product/update/${product.id}`)}>更新</Button>
+                            <Button variant="secondary"
+                                onClick={() => navigate(`/product/update/${product.id}`)}>更新</Button>
                         </TableCell>
                     </TableRow>
                 ))}
