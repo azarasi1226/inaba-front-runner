@@ -219,6 +219,8 @@ export interface components {
             /** Format: int64 */
             totalCount: number;
             /** Format: int32 */
+            totalPage: number;
+            /** Format: int32 */
             pageSize: number;
             /** Format: int32 */
             pageNumber: number;
@@ -362,8 +364,7 @@ export interface operations {
                 likeProductName: string;
                 pageSize: number;
                 pageNumber: number;
-                sortProperty: "PRICE" | "REGISTRATION_DATE";
-                sortDirection: "ASC" | "DESC";
+                sortCondition: "PRICE_ASC" | "PRICE_DESC" | "REGISTRATION_DATE_ASC";
             };
             header?: never;
             path?: never;
